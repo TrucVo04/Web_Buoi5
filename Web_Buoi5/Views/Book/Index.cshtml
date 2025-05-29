@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Web_Buoi5.Models.Book>
+@{
+    ViewData["Title"] = "Danh sách sách";
+}
+
+<h2>Danh sách sách</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Thêm sách mới</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tiêu đề</th>
+            <th>Tác giả</th>
+            <th>Giá</th>
+            <th>Thể loại</th>
+            <th>Ảnh</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.Price.ToString("N0") đ</td>
+                <td>@book.Category?.Name</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(book.ImagePath))
+                    {
+                        <img src="@book.ImagePath" width="100" />
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-info btn-sm">Xem</a>
+                    <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-warning btn-sm">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger btn-sm">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
