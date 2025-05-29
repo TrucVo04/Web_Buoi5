@@ -37,7 +37,7 @@ namespace Web_Buoi5.Models
                     Author = "Nguyễn Nhật Ánh",
                     Price = 120000,
                     Description = "Tập hợp những câu chuyện ngắn đầy cảm xúc về tuổi thơ.",
-                    ImagePath = "/wwwroot/images/b1.jpg",
+                    ImagePath = "/ImageBooks/b1.jpg", // Đã sửa đường dẫn
                     CategoryId = 1
                 },
                 new Book
@@ -47,7 +47,7 @@ namespace Web_Buoi5.Models
                     Author = "Nguyễn Nhật Ánh",
                     Price = 150000,
                     Description = "Hồi ức tuổi thơ đầy cảm xúc tại làng quê Việt Nam.",
-                    ImagePath = "/Content/ImageBooks/hoavangtrencoxanh.jpg",
+                    ImagePath = "/ImageBooks/b2.jpg", // Đã sửa đường dẫn
                     CategoryId = 1
                 },
                 new Book
@@ -57,7 +57,7 @@ namespace Web_Buoi5.Models
                     Author = "Dale Carnegie",
                     Price = 180000,
                     Description = "Cuốn sách kinh điển về nghệ thuật giao tiếp và thuyết phục.",
-                    ImagePath = "/Content/ImageBooks/dacnhantam.jpg",
+                    ImagePath = "/ImageBooks/b3.jpg", // Đã sửa đường dẫn
                     CategoryId = 2
                 }
             );

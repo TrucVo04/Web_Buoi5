@@ -5,42 +5,51 @@
 
 <h2>Thêm sách mới</h2>
 
-<form asp-action="Create" enctype="multipart/form-data" method="post">
+<form asp-action="Create" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
     <div class="form-group">
-        <label asp-for="Title"></label>
+        <label asp-for="Title" class="control-label"></label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Author"></label>
+        <label asp-for="Author" class="control-label"></label>
         <input asp-for="Author" class="form-control" />
         <span asp-validation-for="Author" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Price"></label>
+        <label asp-for="Price" class="control-label"></label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description" class="control-label"></label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label>Thể loại</label>
-        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories"></select>
+        <label asp-for="CategoryId" class="control-label"></label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control"></select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label>Chọn ảnh</label>
+        <label for="ImageFile" class="control-label">Chọn ảnh</label>
         <input type="file" name="ImageFile" class="form-control" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Lưu</button>
-    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    <div class="form-group">
+        <input type="submit" value="Thêm" class="btn btn-primary" />
+    </div>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

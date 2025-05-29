@@ -21,44 +21,50 @@ namespace Web_Buoi5.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // Hiển thị danh sách sách
         public async Task<IActionResult> Index()
         {
             var books = await _context.Books.Include(b => b.Category).ToListAsync();
             return View(books);
         }
 
-        // GET: Tạo sách mới
         public IActionResult Create()
         {
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
-        // POST: Tạo sách mới
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Book book, IFormFile? ImageFile)
         {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
-                return View(book);
-            }
+            // Tạm thời bỏ qua ModelState.IsValid để kiểm tra lưu ảnh
+            // if (!ModelState.IsValid)
+            // {
+            //     ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
+            //     return View(book);
+            // }
 
             if (ImageFile != null && ImageFile.Length > 0)
             {
                 var folder = Path.Combine(_webHostEnvironment.WebRootPath, "ImageBooks");
-                Directory.CreateDirectory(folder);
+                Directory.CreateDirectory(folder); // Đảm bảo thư mục tồn tại
                 var fileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
                 var filePath = Path.Combine(folder, fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                try
                 {
-                    await ImageFile.CopyToAsync(stream);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ImageFile.CopyToAsync(stream);
+                    }
+                    book.ImagePath = "/ImageBooks/" + fileName;
                 }
-
-                book.ImagePath = "/ImageBooks/" + fileName;
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Lỗi khi lưu ảnh: " + ex.Message);
+                    ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", book.CategoryId);
+                    return View(book);
+                }
             }
 
             _context.Add(book);
@@ -66,7 +72,6 @@ namespace Web_Buoi5.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Chi tiết sách
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -75,7 +80,6 @@ namespace Web_Buoi5.Controllers
             return View(book);
         }
 
-        // GET: Chỉnh sửa sách
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -86,7 +90,6 @@ namespace Web_Buoi5.Controllers
             return View(book);
         }
 
-        // POST: Chỉnh sửa sách
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Book book, IFormFile? ImageFile)
@@ -104,7 +107,6 @@ namespace Web_Buoi5.Controllers
 
             if (ImageFile != null && ImageFile.Length > 0)
             {
-                // Xóa ảnh cũ nếu có
                 if (!string.IsNullOrEmpty(existing.ImagePath))
                 {
                     var oldPath = Path.Combine(_webHostEnvironment.WebRootPath, existing.ImagePath.TrimStart('/'));
@@ -136,7 +138,6 @@ namespace Web_Buoi5.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Xác nhận xóa
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -147,7 +148,6 @@ namespace Web_Buoi5.Controllers
             return View(book);
         }
 
-        // POST: Xác nhận xóa
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
